@@ -4,26 +4,27 @@ A Go wrapper for the archive.org Advanced Search API
 # Usage
 Create an AdvancedSearch object
 ```go
-search := internetarchive.AdvancedSearch{
+search := AdvancedSearch{
 		Query{"GratefulDead", "1977-05-08 OR 77-05-08"},
-		Params{[]string{"avg_rating", "date", "downloads", "identifier"}, "downloads desc", 2}}
+		Options{[]string{"avg_rating", "date", "downloads", "identifier"}, "downloads desc", 2}}
+
 ```
 
 Get the response from archive.org for the search
 
 ```go
-response, err := internetarchive.Response(search.Url())
+response, err := search.Search()
 if err != nil {
-    panic(err)
+    panic(err.Error())
 }
 ```
 
 Access the results of the search
 ```go
- docs := response.Response.Docs
-	for i := 0; i < len(docs); i++ {
-		fmt.Println(docs[i])
-	}
+items := response.Body.Items
+for i := 0; i < len(items); i++ {
+    fmt.Println(items[i])
+}
 ```
 Output: 
 ```

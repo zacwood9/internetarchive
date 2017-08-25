@@ -16,10 +16,3 @@ type body struct {
 	Start    int    `json:"start"`
 	Items    []Item `json:"docs"`
 }
-
-type Item struct {
-	Identifier string  `json:"identifier"`
-	Downloads  float64 `json:"downloads"`
-	Date       string  `json:"date"`
-	AvgRating  string  `json:"avg_rating"`
-}
