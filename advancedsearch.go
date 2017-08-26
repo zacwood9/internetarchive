@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-type AdvancedSearch struct {
+type advancedSearch struct {
 	Query   Query
 	Options Options
 }
@@ -25,24 +25,24 @@ type Options struct {
 	Rows   int
 }
 
-func (search AdvancedSearch) Url() string {
+func constructUrl(query Query, options Options) string {
 	start := "https://archive.org/advancedsearch.php?q="
 
 	// format collection and query string
-	end := fmt.Sprintf("collection:\"%s\" %s", search.Query.Collection, search.Query.SearchTerm)
+	end := fmt.Sprintf("collection:\"%s\" %s", query.Collection, query.SearchTerm)
 	end += "&"
 
 	// append all fields
-	for i := 0; i < len(search.Options.Fields); i++ {
-		end += fmt.Sprintf("fl[]=%s&", search.Options.Fields[i])
+	for i := 0; i < len(options.Fields); i++ {
+		end += fmt.Sprintf("fl[]=%s&", options.Fields[i])
 	}
 
 	// append sort method
-	end += fmt.Sprintf("sort[]=%s&", search.Options.SortBy)
+	end += fmt.Sprintf("sort[]=%s&", options.SortBy)
 	end += "sort[]=&sort[]=&"
 
 	// append number of rows
-	end += fmt.Sprintf("rows=%d", search.Options.Rows)
+	end += fmt.Sprintf("rows=%d", options.Rows)
 
 	end += "&page=1&output=json"
 
@@ -56,9 +56,10 @@ func (search AdvancedSearch) Url() string {
 	return start + escaped
 }
 
-func (search AdvancedSearch) Search() (result, error) {
+func AdvancedSearch(query Query, options Options) (result, error) {
 	// do HTTP GET request
-	r, err := http.Get(search.Url())
+	searchUrl := constructUrl(query, options)
+	r, err := http.Get(searchUrl)
 	if err != nil {
 		return result{}, err
 	}
