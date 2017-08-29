@@ -1,6 +1,6 @@
 package internetarchive
 
-type result struct {
+type searchResult struct {
 	Header header `json:"responseHeader"`
 	Body   body   `json:"response"`
 }

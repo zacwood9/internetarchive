@@ -3,7 +3,6 @@ package internetarchive
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
@@ -23,6 +22,12 @@ type Options struct {
 	Fields []string
 	SortBy string
 	Rows   int
+}
+
+func check(e error) {
+	if e != nil {
+		panic(e)
+	}
 }
 
 func constructUrl(query Query, options Options) string {
@@ -56,25 +61,20 @@ func constructUrl(query Query, options Options) string {
 	return start + escaped
 }
 
-func AdvancedSearch(query Query, options Options) (result, error) {
+func AdvancedSearch(query Query, options Options) (searchResult, error) {
 	// do HTTP GET request
 	searchUrl := constructUrl(query, options)
 	r, err := http.Get(searchUrl)
 	if err != nil {
-		return result{}, err
+		return searchResult{}, err
 	}
 	defer r.Body.Close()
 
-	// read the HTTP response into a byte slice
-	data, err := ioutil.ReadAll(r.Body)
+	// decode the response into JSON
+	res := searchResult{}
+	err = json.NewDecoder(r.Body).Decode(&res)
 	if err != nil {
-		return result{}, err
-	}
-
-	// unmarshal the JSON body into res
-	res := result{}
-	if err := json.Unmarshal(data, &res); err != nil {
-		return result{}, err
+		return searchResult{}, err
 	}
 
 	return res, nil

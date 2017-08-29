@@ -15,13 +15,13 @@ type Item struct {
 }
 
 type metadata struct {
-	Created float64 `json:"created"`
-	Dir string `json:"dir"`
-	Files      []map[string]interface{}      `json:"files"`
+	Created    float64                  `json:"created"`
+	Dir        string                   `json:"dir"`
+	Files      []map[string]interface{} `json:"files"`
 	FilesCount float64                  `json:"files_count"`
-	ItemSize float64 `json:"item_size"`
+	ItemSize   float64                  `json:"item_size"`
 	Reviews    []map[string]interface{} `json:"reviews"`
-	CustomData	map[string]interface{} `json:"metadata"`
+	CustomData map[string]interface{}   `json:"metadata"`
 }
 
 func (item *Item) GetMetadata() error {
@@ -35,10 +35,7 @@ func (item *Item) GetMetadata() error {
 
 	// read response
 	data, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		return err
-	}
-
+	check(err)
 	// unmarshal response
 	if err := json.Unmarshal(data, &item.Metadata); err != nil {
 		return err
