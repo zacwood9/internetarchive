@@ -30,28 +30,24 @@ func addCursor(str string, cursor string) string {
 func Crawl(fields []string, collection string, stream chan CrawlResult) {
 	list := strings.Join(fields, ",")
 	crawlUrl := fmt.Sprintf("http://archive.org/services/search/v1/scrape?fields=%s&q=collection%%3A%s", list, collection)
-
-	r, err := http.Get(crawlUrl)
-	check(err)
-
 	result := CrawlResult{}
-	err = json.NewDecoder(r.Body).Decode(&result)
-	check(err)
 
 	for {
-		if result.Cursor == "" {
-			close(stream)
-			break
-		}
-		crawlUrl = addCursor(crawlUrl, result.Cursor)
-		r, err = http.Get(crawlUrl)
+		r, err := http.Get(crawlUrl)
 		check(err)
 
 		result = CrawlResult{}
 		err = json.NewDecoder(r.Body).Decode(&result)
 		check(err)
 
+		if result.Cursor == "" {
+			close(stream)
+			break
+		}
+
 		stream <- result
+
+		crawlUrl = addCursor(crawlUrl, result.Cursor)
 	}
 
 	//for _, item := range result.Items{
