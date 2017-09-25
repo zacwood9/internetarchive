@@ -1,5 +1,5 @@
 # internetarchive
-A Go wrapper for the archive.org Advanced Search API
+A Go wrapper for the archive.org API
 
 # Usage
 Construct Query and Options
