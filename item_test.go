@@ -9,6 +9,8 @@ func TestItem_GetMetadata(t *testing.T) {
 		471380,
 		"1977-05-08",
 		"4.59",
+		"",
+		"",
 		metadata{}}
 
 	if err := item.GetMetadata(); err != nil {

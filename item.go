@@ -11,6 +11,8 @@ type Item struct {
 	Downloads  float64  `json:"downloads"`
 	Date       string   `json:"date"`
 	AvgRating  string   `json:"avg_rating"`
+	Creator    string   `json:"creator"`
+	Title      string   `json:"title"`
 	Metadata   metadata `json:"-"`
 }
 
